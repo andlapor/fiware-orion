@@ -44,6 +44,7 @@ std::string parseAttributeValue(ConnectionInfo* ciP, ContextAttribute* caP)
   Document    document;
   OrionError  oe;
 
+  LM_W(("KZ: In parseAttributeValue"));
   document.Parse(ciP->payload);
 
   if (document.HasParseError())
@@ -64,11 +65,12 @@ std::string parseAttributeValue(ConnectionInfo* ciP, ContextAttribute* caP)
   }
 
   caP->valueType  = (document.IsObject())? orion::ValueTypeObject : orion::ValueTypeVector;
+  LM_W(("KZ: Set valueType to '%s' for attribute %s", valueTypeName(caP->valueType), caP->name.c_str()));
   parseContextAttributeCompoundValueStandAlone(document, caP, caP->valueType);
 
   if (!caP->typeGiven)
   {
-    caP->type = DEFAULT_TYPE;
+    caP->type = schemaType(caP->valueType);
   }
 
   return "OK";

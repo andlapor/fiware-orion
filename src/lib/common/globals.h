@@ -73,8 +73,14 @@
 *
 * other special types
 */
-#define DATE_TYPE     "DateTime"
-#define DEFAULT_TYPE  "none"
+#define DATE_TYPE                 "DateTime"
+#define DEFAULT_ENTITY_TYPE       "Thing"
+#define DEFAULT_ATTR_STRING_TYPE  "Text"
+#define DEFAULT_ATTR_NUMBER_TYPE  "Number"
+#define DEFAULT_ATTR_BOOL_TYPE    "Boolean"
+#define DEFAULT_ATTR_NULL_TYPE    "Null"
+#define DEFAULT_ATTR_ARRAY_TYPE   "Array"
+#define DEFAULT_ATTR_OBJECT_TYPE  "Object"
 
 
 

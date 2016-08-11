@@ -217,7 +217,18 @@ ContextAttribute::ContextAttribute(ContextAttribute* caP, bool useDefaultType)
 
   if (useDefaultType && !typeGiven)
   {
-    type = DEFAULT_TYPE;
+    type = schemaType(valueType);
+
+    //
+    // NOTE:
+    //   Compound values all have attribute type == orion::ValueTypeObject.
+    //   So, if compound, we need to step down into the compound to see whether it is 
+    //   an object or a vector.
+    //
+    if ((valueType == orion::ValueTypeObject) && (compoundValueP->valueType == orion::ValueTypeVector))
+    {
+      type = schemaType(orion::ValueTypeVector);
+    }
   }
 }
 
@@ -718,8 +729,9 @@ std::string ContextAttribute::toJson(bool isLastElement, RenderFormat renderForm
     //
     // type
     //
-    /* This is needed for entities coming from NGSIv1 (which allows empty or missing types) */
-    out += (type != "")? JSON_VALUE("type", type) : JSON_VALUE("type", DEFAULT_TYPE);
+    // This is needed for entities coming from NGSIv1 (which allows empty or missing types)
+    //
+    out += (type != "")? JSON_VALUE("type", type) : JSON_VALUE("type", schemaType(valueType));
     out += ",";
 
 

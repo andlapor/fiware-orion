@@ -246,6 +246,7 @@ void EntityIdVector::fill(EntityVector& _vec)
     Entity*   entityP   = _vec[ix];
     EntityId* entityIdP = new EntityId(entityP->id, entityP->type, entityP->isPattern);
 
+    LM_W(("KZ: filled entity '%s' with type '%s'", entityP->id.c_str(), entityP->type.c_str()));
     vec.push_back(entityIdP);
   }
 }

@@ -215,6 +215,18 @@ std::string parseContextAttributeCompoundValue
     caP->compoundValueP->siblingNo = 0;
 
     parent = caP->compoundValueP;
+
+    if (!caP->typeGiven)
+    {
+      if (type == "Array")
+      {
+        caP->type = schemaType(orion::ValueTypeVector);
+      }
+      else
+      {
+        caP->type = schemaType(orion::ValueTypeObject);
+      }
+    }
   }
 
 
@@ -329,11 +341,6 @@ std::string parseContextAttributeCompoundValue
 
       ++counter;
     }
-  }
-
-  if (!caP->typeGiven)
-  {
-    caP->type = DEFAULT_TYPE;
   }
 
   return "OK";
@@ -483,11 +490,6 @@ std::string parseContextAttributeCompoundValueStandAlone
 
       ++counter;
     }
-  }
-
-  if (!caP->typeGiven)
-  {
-    caP->type = DEFAULT_TYPE;
   }
 
   return "OK";

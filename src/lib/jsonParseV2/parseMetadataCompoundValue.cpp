@@ -212,6 +212,8 @@ std::string parseMetadataCompoundValue
     mdP->compoundValueP->siblingNo = 0;
 
     parent = mdP->compoundValueP;
+
+    mdP->type = (type == "Array")? DEFAULT_ATTR_ARRAY_TYPE : DEFAULT_ATTR_OBJECT_TYPE;
   }
 
 
@@ -325,11 +327,6 @@ std::string parseMetadataCompoundValue
 
       ++counter;
     }
-  }
-
-  if (!mdP->typeGiven)
-  {
-    mdP->type = DEFAULT_TYPE;
   }
 
   return "OK";

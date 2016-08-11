@@ -84,7 +84,11 @@ Metadata::Metadata(Metadata* mP, bool useDefaultType)
 
   if (useDefaultType && !typeGiven)
   {
-    type = DEFAULT_TYPE;
+    type = schemaType(valueType);
+    if ((valueType == orion::ValueTypeObject) && (compoundValueP->valueType == orion::ValueTypeVector))
+    {
+      type = schemaType(orion::ValueTypeVector);
+    }
   }
 }
 
@@ -238,15 +242,7 @@ std::string Metadata::render(const std::string& indent, bool comma)
   {
     std::string part;
 
-    if (compoundValueP->isObject())
-    {
-      part = compoundValueP->toJson(true, false);
-    }
-    else if (compoundValueP->isVector())
-    {
-      part = "[" + compoundValueP->toJson(true, false) + "]";
-    }    
-
+    part = compoundValueP->toJson(true, false);
     out += part;
   }
   else
@@ -435,7 +431,7 @@ std::string Metadata::toJson(bool isLastElement)
   out = JSON_STR(name) + ":{";
 
   /* This is needed for entities coming from NGSIv1 (which allows empty or missing types) */
-  out += (type != "")? JSON_VALUE("type", type) : JSON_VALUE("type", DEFAULT_TYPE);
+  out += (type != "")? JSON_VALUE("type", type) : JSON_VALUE("type", schemaType(valueType));
   out += ",";
 
   if (valueType == orion::ValueTypeString)
@@ -454,7 +450,7 @@ std::string Metadata::toJson(bool isLastElement)
   {
     out += JSON_STR("value") + ":null";
   }
-  else if (valueType == orion::ValueTypeObject)
+  else if ((valueType == orion::ValueTypeObject) || (valueType == orion::ValueTypeVector))
   {
     if ((compoundValueP->isObject()) || (compoundValueP->isVector()))
     {
@@ -471,12 +467,14 @@ std::string Metadata::toJson(bool isLastElement)
       //   don't want for metadata.
       //
       //   This 'hack' was the easiest way I could find to make the rendering of compounds
-      //   for metadata work - might not be the optimal way. A bool parameter coud be passed, for example.
+      //   for metadata work - might not be the optimal way. A bool parameter could be passed, for example.
       //
+      
       compoundValueP->name  = "value";
       compoundValueP->rootP = NULL;
 
-      out += compoundValueP->toJson(isLastElement, false);
+      std::string r = compoundValueP->toJson(isLastElement, false);
+      out += r;
     }
   }
   else

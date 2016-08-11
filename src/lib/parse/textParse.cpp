@@ -42,6 +42,7 @@ static std::string textParseAttributeValue(ConnectionInfo* ciP, ContextAttribute
 {
   double d;
 
+  LM_W(("KZ: In textParseAttributeValue"));
   // 1. Starts and ends with citation marks?
   if (ciP->payload[0] == '"')
   {
@@ -90,6 +91,12 @@ static std::string textParseAttributeValue(ConnectionInfo* ciP, ContextAttribute
     OrionError oe(SccBadRequest, "attribute value type not recognized");
     return oe.setStatusCodeAndSmartRender(ciP);
   }
+
+
+  //
+  // No type can be given for this kind of 'value-request'
+  //
+  caP->type = schemaType(caP->valueType);
 
   return "OK";
 }

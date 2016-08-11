@@ -68,6 +68,8 @@ std::string patchEntity
   std::string  answer = "";
   Entity*      eP     = &parseDataP->ent.res;
 
+  LM_W(("KZ: In patchEntity"));
+
   eP->id = compV[2];
   eP->type = ciP->uriParam["type"];
 

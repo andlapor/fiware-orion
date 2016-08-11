@@ -122,5 +122,10 @@ std::string parseEntityObject(ConnectionInfo* ciP, Value::ConstValueIterator val
     }
   }
 
+  if (!eP->typeGiven)
+  {
+    eP->type = DEFAULT_ENTITY_TYPE;
+  }
+
   return "OK";
 }

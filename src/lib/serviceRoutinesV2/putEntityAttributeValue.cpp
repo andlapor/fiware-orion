@@ -50,8 +50,7 @@
 * 01. Fill in UpdateContextRequest with data from URI and payload
 * 02. Call standard op postUpdateContext
 * 03. Check output from mongoBackend - any errors?
-* 04. Prepare HTTP headers
-* 05. Cleanup and return result
+* 04. Cleanup and return result
 */
 std::string putEntityAttributeValue
 (
@@ -74,9 +73,10 @@ std::string putEntityAttributeValue
 
   // 01. Fill in UpdateContextRequest with data from URI and payload
   parseDataP->av.attribute.name = attributeName;
-  parseDataP->av.attribute.type = "";  // Overwrite 'none', as no type can be given in 'value' payload
+  // parseDataP->av.attribute.type = "";  // Overwrite 'none', as no type can be given in 'value' payload
+  LM_W(("KZ: attribute type: %s", parseDataP->av.attribute.type.c_str()));
 
-  std::string err = parseDataP->av.attribute.check(ciP,ciP->requestType,"","", 0);
+  std::string err = parseDataP->av.attribute.check(ciP, ciP->requestType, "", "", 0);
   if (err != "OK")
   {
     OrionError oe(SccBadRequest, err, "BadRequest");
@@ -87,10 +87,12 @@ std::string putEntityAttributeValue
 
 
   // 02. Call standard op postUpdateContext
+  LM_W(("KZ: Attr type: '%s'", parseDataP->upcr.res.contextElementVector[0]->contextAttributeVector[0]->type.c_str()));
   postUpdateContext(ciP, components, compV, parseDataP);
 
   // 03. Check output from mongoBackend
   std::string answer = "";
+
   if (parseDataP->upcrs.res.oe.code != SccNone)
   {
     TIMED_RENDER(answer = parseDataP->upcrs.res.oe.toJson());
@@ -101,7 +103,7 @@ std::string putEntityAttributeValue
     ciP->httpStatusCode = SccNoContent;
   }
 
-  // 05. Cleanup and return result
+  // 04. Cleanup and return result
   parseDataP->upcr.res.release();
 
   return answer;

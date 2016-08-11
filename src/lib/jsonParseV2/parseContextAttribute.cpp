@@ -46,7 +46,8 @@ using namespace rapidjson;
 */
 static std::string parseContextAttributeObject(const Value& start, ContextAttribute* caP)
 {
-  int members = 0;
+  int   members        = 0;
+  bool  compoundVector = false;
 
   // valueTypeNone will be overridden inside the 'for' block in case the attribute has an actual value
   caP->valueType = orion::ValueTypeNone;
@@ -97,6 +98,7 @@ static std::string parseContextAttributeObject(const Value& start, ContextAttrib
       }
       else if (type == "Array")
       {
+        compoundVector    = true;
         caP->valueType    = orion::ValueTypeVector;
 
         std::string r = parseContextAttributeCompoundValue(iter, caP, NULL);
@@ -156,6 +158,10 @@ static std::string parseContextAttributeObject(const Value& start, ContextAttrib
     caP->valueType   = orion::ValueTypeNumber;
 
   }
+  else if (caP->type == "")
+  {
+    caP->type = (compoundVector)? schemaType(orion::ValueTypeVector) : schemaType(caP->valueType);
+  }
 
   return "OK";
 }
@@ -168,9 +174,10 @@ static std::string parseContextAttributeObject(const Value& start, ContextAttrib
 */
 std::string parseContextAttribute(ConnectionInfo* ciP, const Value::ConstMemberIterator& iter, ContextAttribute* caP)
 {
-  std::string name      = iter->name.GetString();
-  std::string type      = jsonParseTypeNames[iter->value.GetType()];
-  bool        keyValues = ciP->uriParamOptions[OPT_KEY_VALUES];
+  std::string name           = iter->name.GetString();
+  std::string type           = jsonParseTypeNames[iter->value.GetType()];
+  bool        keyValues      = ciP->uriParamOptions[OPT_KEY_VALUES];
+  bool        compoundVector = false;
 
   caP->name = name;
 
@@ -207,8 +214,9 @@ std::string parseContextAttribute(ConnectionInfo* ciP, const Value::ConstMemberI
     }
     else if (type == "Array")
     {
+      compoundVector = true;
       caP->valueType = orion::ValueTypeObject;
-      std::string r = parseContextAttributeCompoundValue(iter, caP, NULL);
+      std::string r  = parseContextAttributeCompoundValue(iter, caP, NULL);
       if (r != "OK")
       {
         alarmMgr.badInput(clientIp, "json error in ContextAttribute::Vector");
@@ -268,7 +276,7 @@ std::string parseContextAttribute(ConnectionInfo* ciP, const Value::ConstMemberI
 
   if (!caP->typeGiven)
   {
-    caP->type = DEFAULT_TYPE;
+    caP->type = (compoundVector)? schemaType(orion::ValueTypeVector) : schemaType(caP->valueType);
   }
 
   return "OK";
@@ -317,9 +325,10 @@ std::string parseContextAttribute(ConnectionInfo* ciP, ContextAttribute* caP)
 
     return oe.toJson();
   }
+
   if (!caP->typeGiven)
   {
-    caP->type = DEFAULT_TYPE;
+    caP->type = schemaType(caP->valueType);
   }
 
   return r;

@@ -360,7 +360,12 @@ void appendMetadata(BSONObjBuilder* mdBuilder, BSONArrayBuilder* mdNamesBuilder,
   std::string type =  mdP->type;
   if (!mdP->typeGiven && useDefaultType)
   {
-    type = DEFAULT_TYPE;
+    type = schemaType(mdP->valueType);
+
+    if ((mdP->compoundValueP) && (mdP->compoundValueP->valueType == orion::ValueTypeVector))
+    {
+      type = schemaType(orion::ValueTypeVector);
+    }
   }
 
   mdNamesBuilder->append(mdP->name);
@@ -710,7 +715,15 @@ static bool updateAttribute
 
     if (!caP->typeGiven && (apiVersion == "v2"))
     {
-      newAttr.append(ENT_ATTRS_TYPE, DEFAULT_TYPE);
+      std::string attrType = schemaType(caP->valueType);
+
+      // Special case: compound array
+      if ((caP->valueType == orion::ValueTypeObject) && (caP->compoundValueP->valueType == orion::ValueTypeVector))
+      {
+        attrType = schemaType(orion::ValueTypeVector);
+      }
+
+      newAttr.append(ENT_ATTRS_TYPE, attrType);
     }
     else
     {
@@ -802,7 +815,15 @@ static bool appendAttribute
   /* 2. Type */
   if ((apiVersion == "v2") && !caP->typeGiven)
   {
-    ab.append(ENT_ATTRS_TYPE, DEFAULT_TYPE);
+    std::string attrType = schemaType(caP->valueType);
+
+    // Special case: compound array
+    if ((caP->valueType == orion::ValueTypeObject) && (caP->compoundValueP->valueType == orion::ValueTypeVector))
+    {
+      attrType = schemaType(orion::ValueTypeVector);
+    }
+
+    ab.append(ENT_ATTRS_TYPE, attrType);
   }
   else
   {
@@ -2373,7 +2394,15 @@ static bool createEntity
 
     if (!attrsV[ix]->typeGiven && (apiVersion == "v2"))
     {
-      bsonAttr.append(ENT_ATTRS_TYPE, DEFAULT_TYPE);
+      std::string attrType = schemaType(attrsV[ix]->valueType);
+
+      // Special case: compound array
+      if ((attrsV[ix]->valueType == orion::ValueTypeObject) && (attrsV[ix]->compoundValueP->valueType == orion::ValueTypeVector))
+      {
+        attrType = schemaType(orion::ValueTypeVector);
+      }
+
+      bsonAttr.append(ENT_ATTRS_TYPE, attrType);
     }
     else
     {
@@ -2418,7 +2447,7 @@ static bool createEntity
     if (apiVersion == "v2")
     {
       // NGSIv2 uses default entity type
-      bsonId.append(ENT_ENTITY_TYPE, DEFAULT_TYPE);
+      bsonId.append(ENT_ENTITY_TYPE, DEFAULT_ENTITY_TYPE);
     }
   }
   else

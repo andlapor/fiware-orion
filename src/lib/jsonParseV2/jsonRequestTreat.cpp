@@ -114,6 +114,7 @@ std::string jsonRequestTreat
 
   case EntityAttributeValueRequest:
     releaseP->attribute = &parseDataP->av.attribute;
+    LM_W(("KZ: Calling parseAttributeValue"));
     answer = parseAttributeValue(ciP, &parseDataP->av.attribute);
     if (answer != "OK")
     {
