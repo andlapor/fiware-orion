@@ -53,6 +53,7 @@ CompoundValueNode::CompoundValueNode():
   container   (NULL),
   rootP       (NULL),
   siblingNo   (0),
+  renderName  (false),
   path        ("Unset"),
   level       (0)
 {
@@ -73,6 +74,7 @@ CompoundValueNode::CompoundValueNode(orion::ValueType _type):
   container   (this),
   rootP       (this),
   siblingNo   (0),
+  renderName  (false),
   path        ("/"),
   level       (0)
 {
@@ -103,6 +105,7 @@ CompoundValueNode::CompoundValueNode
   container   (_container),
   rootP       (container->rootP),
   siblingNo   (_siblingNo),
+  renderName  (false),
   path        (_path),
   level       (container->level + 1)
 {
@@ -138,6 +141,7 @@ CompoundValueNode::CompoundValueNode
   container   (_container),
   rootP       (container->rootP),
   siblingNo   (_siblingNo),
+  renderName  (false),
   path        (_path),
   level       (container->level + 1)
 {
@@ -173,6 +177,7 @@ CompoundValueNode::CompoundValueNode
   container   (_container),
   rootP       (container->rootP),
   siblingNo   (_siblingNo),
+  renderName  (false),
   path        (_path),
   level       (container->level + 1)
 {
@@ -208,6 +213,7 @@ CompoundValueNode::CompoundValueNode
   container   (_container),
   rootP       (container->rootP),
   siblingNo   (_siblingNo),
+  renderName  (false),
   path        (_path),
   level       (container->level + 1)
 {
@@ -806,6 +812,26 @@ std::string CompoundValueNode::toJson(bool isLastElement, bool comma)
     {
       out = JSON_STR(key) + ":" + "null";
     }
+  }
+  //
+  // FIXME P4: FOUR different ifs for vectors ...
+  //           This is just too complex.
+  //           'bool renderName' was just introduced.
+  //           If we also introduce 'bool renderBrackets' we would have all cases
+  //           covered and it could easily be done in a single 'if'
+  //           Same for JSON Objects
+  //
+  //
+  else if ((valueType == orion::ValueTypeVector) && (renderName == true))
+  {
+    LM_T(LmtCompoundValueRender, ("I am a Vector (%s)", name.c_str()));
+    out += JSON_STR(name) + ":[";
+    for (uint64_t ix = 0; ix < childV.size(); ++ix)
+    {
+      out += childV[ix]->toJson(false);
+    }
+
+    out += "]";
   }
   else if ((valueType == orion::ValueTypeVector) && (container == this))
   {

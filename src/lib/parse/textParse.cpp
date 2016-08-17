@@ -42,7 +42,6 @@ static std::string textParseAttributeValue(ConnectionInfo* ciP, ContextAttribute
 {
   double d;
 
-  LM_W(("KZ: In textParseAttributeValue"));
   // 1. Starts and ends with citation marks?
   if (ciP->payload[0] == '"')
   {

@@ -68,8 +68,6 @@ std::string patchEntity
   std::string  answer = "";
   Entity*      eP     = &parseDataP->ent.res;
 
-  LM_W(("KZ: In patchEntity"));
-
   eP->id = compV[2];
   eP->type = ciP->uriParam["type"];
 
@@ -82,7 +80,6 @@ std::string patchEntity
 
   // 01. Fill in UpdateContextRequest
   parseDataP->upcr.res.fill(eP, "UPDATE");
-  
 
   // 02. Call standard op postUpdateContext
   postUpdateContext(ciP, components, compV, parseDataP);

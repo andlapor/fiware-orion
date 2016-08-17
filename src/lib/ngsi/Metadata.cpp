@@ -470,10 +470,14 @@ std::string Metadata::toJson(bool isLastElement)
       //   for metadata work - might not be the optimal way. A bool parameter could be passed, for example.
       //
       
-      compoundValueP->name  = "value";
-      compoundValueP->rootP = NULL;
+      compoundValueP->name       = "value";
+      compoundValueP->rootP      = NULL;
+
+      LM_W(("KZ: Setting renderName to TRUE"));
+      compoundValueP->renderName = true;
 
       std::string r = compoundValueP->toJson(isLastElement, false);
+      LM_W(("KZ: rendered compoundValue: %s", r.c_str()));
       out += r;
     }
   }

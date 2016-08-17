@@ -73,8 +73,14 @@ std::string putEntityAttributeValue
 
   // 01. Fill in UpdateContextRequest with data from URI and payload
   parseDataP->av.attribute.name = attributeName;
-  // parseDataP->av.attribute.type = "";  // Overwrite 'none', as no type can be given in 'value' payload
-  LM_W(("KZ: attribute type: %s", parseDataP->av.attribute.type.c_str()));
+
+  //
+  // FIXME PR: I don't really like this line. However, removing it may cause problems.
+  //           I have a feeling this problem should be solved 'the correct way'.
+  //           Instead, I added a new line, probably not necessary, setting typeGiven to FALSE
+  //
+  parseDataP->av.attribute.type      = "";     // Overwrite 'none', as no type can be given in 'value' payload
+  parseDataP->av.attribute.typeGiven = false;  // Same same
 
   std::string err = parseDataP->av.attribute.check(ciP, ciP->requestType, "", "", 0);
   if (err != "OK")
@@ -87,7 +93,6 @@ std::string putEntityAttributeValue
 
 
   // 02. Call standard op postUpdateContext
-  LM_W(("KZ: Attr type: '%s'", parseDataP->upcr.res.contextElementVector[0]->contextAttributeVector[0]->type.c_str()));
   postUpdateContext(ciP, components, compV, parseDataP);
 
   // 03. Check output from mongoBackend

@@ -510,7 +510,7 @@ static bool mergeAttrInfo(BSONObj& attr, ContextAttribute* caP, BSONObj* mergedA
   }
 
   /* 2. Add type, if present in request. If not, just use the one that is already present in the database. */
-  if (caP->type != "")
+  if (caP->typeGiven)
   {
     ab.append(ENT_ATTRS_TYPE, caP->type);
   }
@@ -755,7 +755,9 @@ static bool updateAttribute
 
     BSONObj newAttr;
     BSONObj attr = getFieldF(attrs, effectiveName).embeddedObject();
+
     actualUpdate = mergeAttrInfo(attr, caP, &newAttr, apiVersion);
+
     if (actualUpdate)
     {
       const std::string composedName = std::string(ENT_ATTRS) + "." + effectiveName;
@@ -3144,7 +3146,6 @@ void processContextElement
 
     docs++;
     LM_T(LmtMongo, ("retrieved document [%d]: '%s'", docs, r.toString().c_str()));
-
     BSONElement idField = getFieldF(r, "_id");
 
     //

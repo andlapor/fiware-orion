@@ -158,7 +158,7 @@ static std::string parseContextAttributeObject(const Value& start, ContextAttrib
     caP->valueType   = orion::ValueTypeNumber;
 
   }
-  else if (caP->type == "")
+  else if (caP->typeGiven == false)
   {
     caP->type = (compoundVector)? schemaType(orion::ValueTypeVector) : schemaType(caP->valueType);
   }

@@ -482,9 +482,6 @@ void ContextAttributeVector::fill(ContextAttributeVector* cavP, bool useDefaultT
     ContextAttribute* from = (*cavP)[ix];
     ContextAttribute* caP = new ContextAttribute(from, useDefaultType);
 
-    LM_W(("KZ: Filled attribute '%s', type '%s', valueType: '%s' (%s, %s, %s)",
-          caP->name.c_str(),  caP->type.c_str(),  valueTypeName(caP->valueType),
-          from->name.c_str(), from->type.c_str(), valueTypeName(from->valueType)));
     push_back(caP);
   }
 }

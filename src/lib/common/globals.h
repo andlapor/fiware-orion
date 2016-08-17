@@ -78,9 +78,9 @@
 #define DEFAULT_ATTR_STRING_TYPE  "Text"
 #define DEFAULT_ATTR_NUMBER_TYPE  "Number"
 #define DEFAULT_ATTR_BOOL_TYPE    "Boolean"
-#define DEFAULT_ATTR_NULL_TYPE    "Null"
-#define DEFAULT_ATTR_ARRAY_TYPE   "Array"
-#define DEFAULT_ATTR_OBJECT_TYPE  "Object"
+#define DEFAULT_ATTR_ARRAY_TYPE   "StructuredValue"
+#define DEFAULT_ATTR_OBJECT_TYPE  "StructuredValue"
+#define DEFAULT_ATTR_NULL_TYPE    "None"
 
 
 
