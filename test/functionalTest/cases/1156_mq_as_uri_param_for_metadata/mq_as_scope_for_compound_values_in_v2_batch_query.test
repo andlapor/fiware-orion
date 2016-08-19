@@ -183,7 +183,7 @@ Date: REGEX(.*)
 05. GET entities matching q=A1==1 AND mq=A1.M1.b==2, using /v2/op/query, see E2
 ===============================================================================
 HTTP/1.1 200 OK
-Content-Length: 119
+Content-Length: 128
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
@@ -193,7 +193,7 @@ Date: REGEX(.*)
         "A1": {
             "metadata": {
                 "M1": {
-                    "type": "Object",
+                    "type": "StructuredValue",
                     "value": {
                         "a": 1,
                         "b": 2

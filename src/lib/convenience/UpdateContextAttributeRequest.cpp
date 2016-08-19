@@ -45,7 +45,8 @@ UpdateContextAttributeRequest::UpdateContextAttributeRequest()
 {
   metadataVector.keyNameSet("metadata");
   compoundValueP = NULL;
-  valueType = orion::ValueTypeNone;
+  valueType      = orion::ValueTypeNone;
+  typeGiven      = false;
 }
 
 

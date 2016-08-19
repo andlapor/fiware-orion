@@ -21,127 +21,137 @@
 # VALGRIND_READY - to mark the test ready for valgrindTestSuite.sh
 
 --NAME--
-V2 batch update REPLACE
+PATCH to add a metadata
 
 --SHELL-INIT--
 dbInit CB
-brokerStart CB 0
+brokerStart CB
 
 --SHELL--
 
 #
-# 01. Create E1/T1/A1=1, using POST /v2/op/update with APPEND
-# 02. GET /v2/entities/E1 to see E1/T1/A1=1
-# 03. Modify E1 to have an attribute A2=3 instead using POST /v2/op/update with REPLACE
-# 04. GET /v2/entities/E1 to see E1/T1/A2=3
+# 01. Create entity E1, with attr A1=1, having metadata M1=1
+# 02. GET E1 to see A1/M1
+# 03. Patch E1, adding metadata M2=2 to A1
+# 04. GET E1 to see A1/M1+M2
 #
 
-echo "01. Create E1/T1/A1=1, using POST /v2/op/update with APPEND"
-echo "==========================================================="
+echo "01. Create entity E1, with attr A1=1, having metadata M1=1"
+echo "=========================================================="
 payload='{
-  "actionType": "APPEND",
-  "entities": [
-    {
-      "id": "E1",
-      "type": "T1",
-      "A1": {
+  "id": "E1",
+  "A1": {
+    "value": 1,
+    "metadata": {
+      "M1": {
         "value": 1
       }
     }
-  ]
+  }
 }'
-orionCurl --url /v2/op/update --payload "$payload"
+orionCurl --url /v2/entities --payload "$payload"
 echo
 echo
 
 
-echo "02. GET /v2/entities/E1 to see E1/T1/A1=1"
-echo "========================================="
+echo "02. GET E1 to see A1/M1"
+echo "======================="
 orionCurl --url /v2/entities/E1
 echo
 echo
 
 
-echo "03. Modify E1 to have an attribute A2=3 instead using POST /v2/op/update with REPLACE"
-echo "====================================================================================="
+echo "03. Patch E1, adding metadata M2=2 to A1"
+echo "========================================"
 payload='{
-  "actionType": "REPLACE",
-  "entities": [
-    {
-      "id": "E1",
-      "type": "T1",
-      "A2": {
-        "value": 3
+  "A1": {
+    "metadata": {
+      "M2": {
+        "value": 2
       }
     }
-  ]
+  }
 }'
-orionCurl --url /v2/op/update --payload "$payload"
+orionCurl --url /v2/entities/E1/attrs --payload "$payload" -X PATCH
 echo
 echo
 
 
-echo "04. GET /v2/entities/E1 to see E1/T1/A2=3"
-echo "========================================="
+echo "04. GET E1 to see A1/M1+M2"
+echo "=========================="
 orionCurl --url /v2/entities/E1
 echo
 echo
 
 
 --REGEXPECT--
-01. Create E1/T1/A1=1, using POST /v2/op/update with APPEND
-===========================================================
-HTTP/1.1 204 No Content
+01. Create entity E1, with attr A1=1, having metadata M1=1
+==========================================================
+HTTP/1.1 201 Created
 Content-Length: 0
+Location: /v2/entities/E1?type=Thing
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
 
 
 
-02. GET /v2/entities/E1 to see E1/T1/A1=1
-=========================================
+02. GET E1 to see A1/M1
+=======================
 HTTP/1.1 200 OK
-Content-Length: 70
+Content-Length: 105
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
 
 {
     "A1": {
-        "metadata": {},
+        "metadata": {
+            "M1": {
+                "type": "Number",
+                "value": 1
+            }
+        },
         "type": "Number",
         "value": 1
     },
     "id": "E1",
-    "type": "T1"
+    "type": "Thing"
 }
 
 
-03. Modify E1 to have an attribute A2=3 instead using POST /v2/op/update with REPLACE
-=====================================================================================
+03. Patch E1, adding metadata M2=2 to A1
+========================================
 HTTP/1.1 204 No Content
 Content-Length: 0
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
 
 
-
-04. GET /v2/entities/E1 to see E1/T1/A2=3
-=========================================
+04. GET E1 to see A1/M1+M2
+==========================
 HTTP/1.1 200 OK
-Content-Length: 70
+Content-Length: 138
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
 
 {
-    "A2": {
-        "metadata": {},
+    "A1": {
+        "metadata": {
+            "M1": {
+                "type": "Number",
+                "value": 1
+            },
+            "M2": {
+                "type": "Number",
+                "value": 2
+            }
+        },
         "type": "Number",
-        "value": 3
+        "value": 1
     },
     "id": "E1",
-    "type": "T1"
+    "type": "Thing"
 }
 
 

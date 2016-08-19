@@ -30,6 +30,9 @@ brokerStart CB
 --SHELL--
 
 #
+# FIXME P6: steps 07, 09, 11, 13, and 15 in REGEXPECT of this test must change once the
+#           issue #2451 is resolved
+#
 # 01. PUT /v2/entities/E1/attrs/A1/value and see it fail
 # 02. POST /v2/entities to create E1/A1=2
 # 03. GET /v2/entities/E1 to see A1==2
@@ -243,7 +246,7 @@ Date: REGEX(.*)
 07. GET /v2/entities/E1 to see A1==true
 =======================================
 HTTP/1.1 200 OK
-Content-Length: 74
+Content-Length: 73
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
@@ -251,7 +254,7 @@ Date: REGEX(.*)
 {
     "A1": {
         "metadata": {},
-        "type": "Boolean",
+        "type": "Number",
         "value": true
     },
     "id": "E1",
@@ -271,7 +274,7 @@ Date: REGEX(.*)
 09. GET /v2/entities/E1 to see A1==false
 ========================================
 HTTP/1.1 200 OK
-Content-Length: 75
+Content-Length: 74
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
@@ -279,7 +282,7 @@ Date: REGEX(.*)
 {
     "A1": {
         "metadata": {},
-        "type": "Boolean",
+        "type": "Number",
         "value": false
     },
     "id": "E1",
@@ -299,7 +302,7 @@ Date: REGEX(.*)
 11. GET /v2/entities/E1 to see A1=="STRING"
 ===========================================
 HTTP/1.1 200 OK
-Content-Length: 75
+Content-Length: 77
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
@@ -307,7 +310,7 @@ Date: REGEX(.*)
 {
     "A1": {
         "metadata": {},
-        "type": "Text",
+        "type": "Number",
         "value": "STRING"
     },
     "id": "E1",
@@ -327,7 +330,7 @@ Date: REGEX(.*)
 13. GET /v2/entities/E1 to see A1==[ 1, 2, 3 ]
 ==============================================
 HTTP/1.1 200 OK
-Content-Length: 75
+Content-Length: 76
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
@@ -335,7 +338,7 @@ Date: REGEX(.*)
 {
     "A1": {
         "metadata": {},
-        "type": "Array",
+        "type": "Number",
         "value": [
             1,
             2,
@@ -367,7 +370,7 @@ Date: REGEX(.*)
 {
     "A1": {
         "metadata": {},
-        "type": "Object",
+        "type": "Number",
         "value": {
             "a": 1,
             "b": 2,

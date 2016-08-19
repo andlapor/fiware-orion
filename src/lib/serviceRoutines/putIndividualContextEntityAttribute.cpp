@@ -78,9 +78,10 @@ std::string putIndividualContextEntityAttribute
   std::string  attributeName = compV[4];
   StatusCode   response;
   
-
+  LM_W(("KZ: Fill in UpdateContextRequest"));
   // 1. Fill in UpdateContextRequest from UpdateContextAttributeRequest and URL-path components
   parseDataP->upcr.res.fill(&parseDataP->upcar.res, entityId, entityType, attributeName, "", "UPDATE");
+  LM_W(("KZ: Filled in UpdateContextRequest"));
   
 
   // 2. Call postUpdateContext standard service routine

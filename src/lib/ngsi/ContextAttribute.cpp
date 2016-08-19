@@ -199,6 +199,8 @@ ContextAttribute::ContextAttribute(ContextAttribute* caP, bool useDefaultType)
   skip                  = false;
   typeGiven             = caP->typeGiven;
 
+  LM_W(("KZ: New ContextAttribute '%s', type '%s'", name.c_str(), type.c_str()));
+
   providingApplication.set(caP->providingApplication.get());
   providingApplication.setMimeType(caP->providingApplication.getMimeType());
 
@@ -243,7 +245,8 @@ ContextAttribute::ContextAttribute
   const std::string&  _name,
   const std::string&  _type,
   const char*         _value,
-  bool                _found
+  bool                _found,
+  bool                _typeGiven
 )
 {
   LM_T(LmtClone, ("Creating a string ContextAttribute '%s':'%s':'%s', setting its compound to NULL",
@@ -258,8 +261,9 @@ ContextAttribute::ContextAttribute
   compoundValueP        = NULL;
   found                 = _found;
   skip                  = false;
-  typeGiven             = false;
+  typeGiven             = _typeGiven;
 
+  LM_W(("KZ: typeGiven set to %s for attribute '%s'", typeGiven? "TRUE" : "FALSE", name.c_str()));
   providingApplication.set("");
   providingApplication.setMimeType(NOMIMETYPE);
 }
@@ -275,9 +279,11 @@ ContextAttribute::ContextAttribute
   const std::string&  _name,
   const std::string&  _type,
   const std::string&  _value,
-  bool                _found
+  bool                _found,
+  bool                _typeGiven
 )
 {
+  LM_W(("KZ: In ContextAttribute::ContextAttribute"));
   LM_T(LmtClone, ("Creating a string ContextAttribute '%s':'%s':'%s', setting its compound to NULL",
                   _name.c_str(),
                   _type.c_str(),
@@ -290,7 +296,9 @@ ContextAttribute::ContextAttribute
   compoundValueP        = NULL;
   found                 = _found;
   skip                  = false;
-  typeGiven             = false;
+  typeGiven             = _typeGiven;
+
+  LM_W(("KZ: typeGiven set to %s for attribute '%s'", typeGiven? "TRUE" : "FALSE", name.c_str()));
 
   providingApplication.set("");
   providingApplication.setMimeType(NOMIMETYPE);
@@ -324,6 +332,8 @@ ContextAttribute::ContextAttribute
   skip                  = false;
   typeGiven             = false;
 
+  LM_W(("KZ: typeGiven set to FALSE for attribute '%s'", name.c_str()));
+
   providingApplication.set("");
   providingApplication.setMimeType(NOMIMETYPE);
 }
@@ -356,6 +366,8 @@ ContextAttribute::ContextAttribute
   skip                  = false;
   typeGiven             = false;
 
+  LM_W(("KZ: typeGiven set to FALSE for attribute '%s' in BOOL constructor", name.c_str()));
+
   providingApplication.set("");
   providingApplication.setMimeType(NOMIMETYPE);
 }
@@ -383,6 +395,8 @@ ContextAttribute::ContextAttribute
   valueType             = orion::ValueTypeObject;  // FIXME P6: Could be ValueTypeVector ...
   skip                  = false;
   typeGiven             = false;
+
+  LM_W(("KZ: typeGiven set to FALSE for attribute '%s'", name.c_str()));
 
   providingApplication.set("");
   providingApplication.setMimeType(NOMIMETYPE);
@@ -599,6 +613,7 @@ std::string ContextAttribute::render
 
   if (compoundValueP == NULL)
   {
+    LM_W(("KZ: compoundValueP == NULL"));
     if (omitValue == false)
     {
       std::string effectiveValue = "";
@@ -636,20 +651,24 @@ std::string ContextAttribute::render
         LM_E(("Runtime Error (unknown value type: %d)", valueType));
       }
 
-      out += valueTag2(indent + "  ", "value",
+      std::string v2 = valueTag2(indent + "  ", "value",
                               (request != RtUpdateContextResponse)? effectiveValue : "",
                               commaAfterContextValue, withoutQuotes);
 
+      LM_W(("KZ: effectiveValue == '%s'", effectiveValue.c_str()));
+      out += v2;
+      LM_W(("KZ: v2: '%s'", v2.c_str()));
     }
     else if (request == RtUpdateContextResponse)
     {
+      LM_W(("KZ: empty value?"));
       out += valueTag1(indent + "  ", "value", "", commaAfterContextValue);
     }
   }
   else
   {
     bool isCompoundVector = false;
-
+    LM_W(("KZ: Here"));
     if ((compoundValueP != NULL) && (compoundValueP->valueType == orion::ValueTypeVector))
     {
       isCompoundVector = true;

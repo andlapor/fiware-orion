@@ -45,6 +45,7 @@ typedef struct UpdateContextAttributeRequest
   std::string                contextValue;        // Mandatory  
   MetadataVector             metadataVector;      // Optional
 
+  bool                       typeGiven;           // was 'type' present?
   orion::ValueType           valueType;           // Type of value: either string or none  
   orion::CompoundValueNode*  compoundValueP;
 

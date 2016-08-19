@@ -479,9 +479,12 @@ void ContextAttributeVector::fill(ContextAttributeVector* cavP, bool useDefaultT
 
   for (unsigned int ix = 0; ix < cavP->size(); ++ix)
   {
-    ContextAttribute* from = (*cavP)[ix];
-    ContextAttribute* caP = new ContextAttribute(from, useDefaultType);
+    ContextAttribute* fromP = (*cavP)[ix];
+    ContextAttribute* caP   = new ContextAttribute(fromP, useDefaultType);
 
+    caP->typeGiven = fromP->typeGiven;
+    LM_W(("KZ: caP->type: %s", caP->type.c_str()));
+    LM_W(("KZ: caP->typeGiven: %s", caP->typeGiven? "Yes" : "No"));
     push_back(caP);
   }
 }

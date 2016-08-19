@@ -367,6 +367,8 @@ void appendMetadata(BSONObjBuilder* mdBuilder, BSONArrayBuilder* mdNamesBuilder,
       type = schemaType(orion::ValueTypeVector);
     }
   }
+  else
+    LM_W(("KZ: Not setting metadata type (%s)", mdP->type.c_str()));
 
   mdNamesBuilder->append(mdP->name);
   std::string effectiveName = dbDotEncode(mdP->name);
@@ -510,12 +512,14 @@ static bool mergeAttrInfo(BSONObj& attr, ContextAttribute* caP, BSONObj* mergedA
   }
 
   /* 2. Add type, if present in request. If not, just use the one that is already present in the database. */
-  if (caP->typeGiven)
+//  if (caP->typeGiven)
+  if (caP->type != "")
   {
     ab.append(ENT_ATTRS_TYPE, caP->type);
   }
   else
   {
+    LM_W(("KZ: Not setting attribute type (%s)", caP->type.c_str()));
     if (attr.hasField(ENT_ATTRS_TYPE))
     {
       ab.append(ENT_ATTRS_TYPE, getStringFieldF(attr, ENT_ATTRS_TYPE));
@@ -723,6 +727,7 @@ static bool updateAttribute
         attrType = schemaType(orion::ValueTypeVector);
       }
 
+      LM_W(("KZ: Setting attribute type (NOT '%s' but '%s')", caP->type.c_str(), attrType.c_str()));
       newAttr.append(ENT_ATTRS_TYPE, attrType);
     }
     else
@@ -820,11 +825,12 @@ static bool appendAttribute
     std::string attrType = schemaType(caP->valueType);
 
     // Special case: compound array
-    if ((caP->valueType == orion::ValueTypeObject) && (caP->compoundValueP->valueType == orion::ValueTypeVector))
+    if ((caP->valueType == orion::ValueTypeObject) && (caP->compoundValueP->valueType == orion::ValueTypeVector)) 
     {
       attrType = schemaType(orion::ValueTypeVector);
     }
 
+    LM_W(("KZ: Setting attribute type (NOT '%s' but '%s')", caP->type.c_str(), attrType.c_str()));
     ab.append(ENT_ATTRS_TYPE, attrType);
   }
   else
@@ -1911,7 +1917,9 @@ static void updateAttrInNotifyCer
   }
 
   /* Reached this point, it means that it is a new attribute (APPEND case) */
+  LM_W(("KZ: Before new ContextAttribute"));
   ContextAttribute* caP = new ContextAttribute(targetAttr, useDefaultType);
+  LM_W(("KZ: After new ContextAttribute"));
 
   if (caP->compoundValueP)
   {
@@ -2200,7 +2208,9 @@ static bool processContextAttributeVector
     }
 
     /* No matter if success or fail, we have to include the attribute in the response */
+    LM_W(("KZ: Before new ContextAttribute"));
     ContextAttribute*  ca         = new ContextAttribute(targetAttr->name, targetAttr->type, "");
+    LM_W(("KZ: After new ContextAttribute"));
 
     setResponseMetadata(targetAttr, ca);
     cerP->contextElement.contextAttributeVector.push_back(ca);
@@ -2404,6 +2414,7 @@ static bool createEntity
         attrType = schemaType(orion::ValueTypeVector);
       }
 
+      LM_W(("KZ: Setting attribute type (NOT '%s' but '%s')", attrsV[ix]->type.c_str(), attrType.c_str()));
       bsonAttr.append(ENT_ATTRS_TYPE, attrType);
     }
     else
@@ -2952,7 +2963,9 @@ static bool contextElementPreconditionsCheck
     {
       if ((name == ceP->contextAttributeVector[jx]->name) && (id == ceP->contextAttributeVector[jx]->getId()))
       {
+        LM_W(("KZ: Before new ContextAttribute"));
         ContextAttribute* ca = new ContextAttribute(ceP->contextAttributeVector[ix]);
+        LM_W(("KZ: After new ContextAttribute"));
         std::string details = std::string("duplicated attribute name: name=<") + name + "> id=<" + id + ">";
         alarmMgr.badInput(clientIp, details);
         buildGeneralErrorResponse(ceP, ca, responseP, SccInvalidModification,
@@ -2986,7 +2999,9 @@ static bool contextElementPreconditionsCheck
       ContextAttribute* aP = ceP->contextAttributeVector[ix];
       if (attributeValueAbsent(aP, apiVersion) && attributeTypeAbsent(aP) && (aP->metadataVector.size() == 0))
       {
+        LM_W(("KZ: Before new ContextAttribute"));
         ContextAttribute* ca = new ContextAttribute(aP);
+        LM_W(("KZ: After new ContextAttribute"));
 
         std::string details = std::string("action: ") + action +
             " - entity: [" + enP->toString(true) + "]" +
@@ -3214,7 +3229,9 @@ void processContextElement
     for (unsigned int ix = 0; ix < ceP->contextAttributeVector.size(); ++ix)
     {
       ContextAttribute*  caP  = ceP->contextAttributeVector[ix];
-      ContextAttribute*  ca   = new ContextAttribute(caP->name, caP->type, "", foundValue);
+      LM_W(("KZ: Before new ContextAttribute"));
+      ContextAttribute*  ca   = new ContextAttribute(caP->name, caP->type, "", foundValue, false);
+      LM_W(("KZ: After new ContextAttribute"));
 
       setResponseMetadata(caP, ca);
       cerP->contextElement.contextAttributeVector.push_back(ca);

@@ -345,7 +345,6 @@ struct UpdateContextAttributeData
   UpdateContextAttributeData(): metadataP(NULL) {}
   UpdateContextAttributeRequest  res;
   Metadata*                      metadataP;
-  ContextAttribute               attribute;
 };
 
 

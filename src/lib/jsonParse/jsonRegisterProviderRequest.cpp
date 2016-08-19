@@ -74,7 +74,8 @@ static std::string contextMetadataName(const std::string& path, const std::strin
 static std::string contextMetadataType(const std::string& path, const std::string& value, ParseData* reqData)
 {
   LM_T(LmtParse, ("Got a metadata type '%s'", value.c_str()));
-  reqData->rpr.metadataP->type = value;
+  reqData->rpr.metadataP->type      = value;
+  reqData->rpr.metadataP->typeGiven = true;
   return "OK";
 }
 

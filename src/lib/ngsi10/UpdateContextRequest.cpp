@@ -244,16 +244,21 @@ void UpdateContextRequest::fill
   ContextElement*   ceP = new ContextElement();
   ContextAttribute* caP;
 
+  LM_W(("KZ: typeGiven: %s", ucarP->typeGiven? "true" : "false"));
   if (ucarP->compoundValueP != NULL)
   {
-    caP = new ContextAttribute(attributeName, ucarP->type, ucarP->compoundValueP);
+    LM_W(("KZ: Creating new ContextAttribute for compound"));
+    caP = new ContextAttribute(attributeName, ucarP->type, ucarP->compoundValueP);  // FIXME: ucarP->typeGiven here also ...
   }
   else
   {
-    caP = new ContextAttribute(attributeName, ucarP->type, ucarP->contextValue);
+    LM_W(("KZ: Creating new ContextAttribute"));
+    caP = new ContextAttribute(attributeName, ucarP->type, ucarP->contextValue, true, ucarP->typeGiven);
     caP->valueType = ucarP->valueType;
   }
+  LM_W(("KZ: typeGiven: %s", ucarP->typeGiven? "true" : "false"));
 
+  caP->typeGiven = ucarP->typeGiven;
   caP->metadataVector.fill((MetadataVector*) &ucarP->metadataVector);
   ceP->contextAttributeVector.push_back(caP);
   ceP->entityId.fill(entityId, entityType, "false");
@@ -280,6 +285,8 @@ void UpdateContextRequest::fill
   }
 
   updateActionType.set(_updateActionType);
+
+  LM_W(("KZ: From"));
 }
 
 

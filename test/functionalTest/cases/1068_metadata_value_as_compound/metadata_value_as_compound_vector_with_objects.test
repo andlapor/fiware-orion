@@ -82,7 +82,7 @@ Date: REGEX(.*)
 02. GET /v2/entities, to see the entity
 =======================================
 HTTP/1.1 200 OK
-Content-Length: 134
+Content-Length: 144
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
@@ -94,7 +94,7 @@ Date: REGEX(.*)
         "vecCompound": {
             "metadata": {
                 "M1": {
-                    "type": "Array",
+                    "type": "StructuredValue",
                     "value": [
                         {
                             "a": 12

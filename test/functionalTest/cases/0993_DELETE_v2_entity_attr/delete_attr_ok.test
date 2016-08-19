@@ -102,7 +102,7 @@ Date: REGEX(.*)
 02. GET /v2/entities/E1
 =======================
 HTTP/1.1 200 OK
-Content-Length: 180
+Content-Length: 189
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
@@ -110,7 +110,7 @@ Date: REGEX(.*)
 {
     "compattr": {
         "metadata": {},
-        "type": "Object",
+        "type": "StructuredValue",
         "value": {
             "bool": true,
             "number": 2,

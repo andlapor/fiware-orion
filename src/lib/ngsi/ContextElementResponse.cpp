@@ -201,7 +201,7 @@ ContextElementResponse::ContextElementResponse
         {
           continue;
         }
-        caP = new ContextAttribute(ca.name, ca.type, ca.stringValue);
+        caP = new ContextAttribute(ca.name, ca.type, ca.stringValue, true, false);
         break;
 
       case NumberDouble:

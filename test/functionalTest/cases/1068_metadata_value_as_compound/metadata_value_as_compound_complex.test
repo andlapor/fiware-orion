@@ -118,7 +118,7 @@ Date: REGEX(.*)
 02. GET /v2/entities, to see the entity
 =======================================
 HTTP/1.1 200 OK
-Content-Length: 566
+Content-Length: 593
 Content-Type: application/json
 Fiware-Correlator: REGEX([0-9a-f\-]{36})
 Date: REGEX(.*)
@@ -129,7 +129,7 @@ Date: REGEX(.*)
         "mixCompound": {
             "metadata": {
                 "M1": {
-                    "type": "Object",
+                    "type": "StructuredValue",
                     "value": {
                         "a": "1",
                         "b": 2,
@@ -174,7 +174,7 @@ Date: REGEX(.*)
         "objCompound": {
             "metadata": {
                 "M1": {
-                    "type": "Object",
+                    "type": "StructuredValue",
                     "value": {
                         "x": {
                             "x1": "a",
@@ -193,7 +193,7 @@ Date: REGEX(.*)
         "objCompound2": {
             "metadata": {
                 "M1": {
-                    "type": "Object",
+                    "type": "StructuredValue",
                     "value": {
                         "22": 22,
                         "o": {

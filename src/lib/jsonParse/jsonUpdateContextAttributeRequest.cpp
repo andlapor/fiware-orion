@@ -44,8 +44,9 @@
 */
 static std::string attributeType(const std::string& path, const std::string& value, ParseData* reqData)
 {
-  reqData->upcar.res.type = value;
-
+  reqData->upcar.res.type      = value;
+  reqData->upcar.res.typeGiven = true;
+  LM_W(("KZ: Got an attributeType: %s (typeGiven set to TRUE)", reqData->upcar.res.type.c_str()));
   return "OK";
 }
 
@@ -99,7 +100,7 @@ static std::string contextMetadataName(const std::string& path, const std::strin
 static std::string contextMetadataType(const std::string& path, const std::string& value, ParseData* reqData)
 {
   LM_T(LmtParse, ("Got a metadata type: '%s'", value.c_str()));
-  reqData->upcar.metadataP->type = value;
+  reqData->upcar.metadataP->type      = value;
   reqData->upcar.metadataP->typeGiven = true;
   return "OK";
 }

@@ -86,7 +86,8 @@ static std::string contextAttributeName(const std::string& path, const std::stri
 static std::string contextAttributeType(const std::string& path, const std::string& value, ParseData* reqData)
 {
   LM_T(LmtParse, ("Got an attribute type: %s", value.c_str()));
-  reqData->ucer.attributeP->type = value;
+  reqData->ucer.attributeP->type      = value;
+  reqData->ucer.attributeP->typeGiven = true;
   return "OK";
 }
 
@@ -141,7 +142,8 @@ static std::string contextMetadataName(const std::string& path, const std::strin
 static std::string contextMetadataType(const std::string& path, const std::string& value, ParseData* reqData)
 {
   LM_T(LmtParse, ("Got a metadata type '%s'", value.c_str()));
-  reqData->ucer.metadataP->type = value;
+  reqData->ucer.metadataP->type      = value;
+  reqData->ucer.metadataP->typeGiven = true;
   return "OK";
 }
 
