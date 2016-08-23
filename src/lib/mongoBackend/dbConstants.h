@@ -88,6 +88,7 @@
 #define CSUB_ENTITY_ID          "id"
 #define CSUB_ENTITY_TYPE        "type"
 #define CSUB_ENTITY_ISPATTERN   "isPattern"
+#define CSUB_ENTITY_ISTYPEPAT   "isTypePattern"
 #define CSUB_COUNT              "count"
 #define CSUB_FORMAT             "format"
 #define CSUB_STATUS             "status"
